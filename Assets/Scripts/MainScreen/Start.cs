@@ -1,10 +1,11 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // 씬 관리를 위해 필수
+using UnityEngine.SceneManagement;
 
-public class Start : MonoBehaviour
+public class SpriteButton : MonoBehaviour
 {
-    public void ChangeToInGame()
+    // 마우스 커서가 스프라이트 클릭 영역(Collider) 안에서 눌렸을 때 자동 실행
+    private void OnMouseDown()
     {
-        SceneManager.LoadScene("InGame"); 
+        SceneManager.LoadScene("InGame");
     }
 }
