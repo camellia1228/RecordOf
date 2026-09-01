@@ -64,7 +64,7 @@ public class Bullet : MonoBehaviour
 /// <summary>
 /// 총알 발사를 담당한다. 플레이어(또는 총구) 오브젝트에 부착.
 /// 마우스 좌클릭 시 PlayerCursor의 조준 방향으로 총알(스프라이트 1)과
-/// 발사 이펙트(스프라이트 2)를 생성한다.
+/// 발사 이펙트(스프라이트 2)를 생성ㅇㅇ
 /// </summary>
 public class BulletShooter : MonoBehaviour
 {

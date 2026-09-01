@@ -58,22 +58,33 @@ public class PlayerCursor : MonoBehaviour
         cursorRenderer.transform.position = mouseWorldPos;
     }
 
-    // 플레이어 -> 마우스 방향을 계산해서 조준점 위치/회전 갱신
+    // 마우스 좌표를 받아서 플레이어 기준 x,y 비율을 계산하고
+    // 그 비율(방향) * 반지름(aimDistance) 만큼 떨어진 좌표에 조준점을 계속 갱신
     private void UpdateAimReticle(Vector3 mouseWorldPos)
     {
         if (aimReticle == null || player == null) return;
 
-        Vector2 direction = (mouseWorldPos - player.position);
-        if (direction.sqrMagnitude < 0.0001f) return;
-        direction.Normalize();
+        // 1. 플레이어 -> 마우스 좌표 차이 (x, y)
+        float diffX = mouseWorldPos.x - player.position.x;
+        float diffY = mouseWorldPos.y - player.position.y;
 
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        // 2. 대각선 길이(거리) 계산
+        float distance = Mathf.Sqrt(diffX * diffX + diffY * diffY);
+        if (distance < 0.0001f) return; // 마우스가 플레이어 위치와 거의 겹치면 계산 스킵
 
-        // 조준점을 플레이어로부터 일정 거리에 위치시킴 (산나비의 와이어 조준점처럼)
-        aimReticle.position = player.position + (Vector3)(direction * aimDistance);
+        // 3. x, y 각각의 비율(방향 성분) 계산 -> -1~1 사이 값
+        float ratioX = diffX / distance;
+        float ratioY = diffY / distance;
 
+        // 4. 비율 * 반지름(aimDistance) 만큼 플레이어 좌표에서 떨어뜨려서 조준점 좌표를 설정
+        float reticleX = player.position.x + ratioX * aimDistance;
+        float reticleY = player.position.y + ratioY * aimDistance;
+        aimReticle.position = new Vector3(reticleX, reticleY, aimReticle.position.z);
+
+        // 5. (선택) 방향에 맞춰 회전도 같이 적용하고 싶을 때
         if (rotateReticle)
         {
+            float angle = Mathf.Atan2(ratioY, ratioX) * Mathf.Rad2Deg;
             aimReticle.rotation = Quaternion.Euler(0f, 0f, angle);
         }
     }
