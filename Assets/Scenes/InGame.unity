@@ -528,7 +528,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 442252846}
-  - {fileID: 1404690338}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &214875007
@@ -627,9 +626,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Dash
   dashSpeed: 20
-  dashDuration: 0.2
   dashHpCost: 5
-  playerCursor: {fileID: 0}
+  playerCursor: {fileID: 214875009}
   hpBar: {fileID: 0}
   spriteTransform: {fileID: 0}
 --- !u!114 &214875011
@@ -1123,6 +1121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1404690338}
   - component: {fileID: 1404690339}
+  - component: {fileID: 1404690340}
   m_Layer: 0
   m_Name: Ellipse 4
   m_TagString: Untagged
@@ -1139,11 +1138,11 @@ Transform:
   m_GameObject: {fileID: 1404690337}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4.1861186, y: 1.22737, z: 1.22737}
+  m_LocalPosition: {x: -6.52, y: -1.99, z: 0}
+  m_LocalScale: {x: 0.5479651, y: 0.5479651, z: 0.5479651}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 214875005}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1404690339
 SpriteRenderer:
@@ -1194,7 +1193,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 6c6512022cf5e934585472f8e7c3e0e5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2c377133e64b082458438b75f2724bb0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1204,6 +1203,19 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1404690340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404690337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 525c1a92afb5e554bb03b8b22dc72c8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Spin
+  rotationSpeed: 50
 --- !u!1001 &1699221250
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1421,5 +1433,6 @@ SceneRoots:
   - {fileID: 950568055}
   - {fileID: 70148868}
   - {fileID: 137438730}
-  - {fileID: 942982082}
   - {fileID: 1720457462}
+  - {fileID: 942982082}
+  - {fileID: 1404690338}
