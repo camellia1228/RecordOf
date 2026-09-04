@@ -10,9 +10,10 @@ using UnityEngine;
 public class Dash : MonoBehaviour
 {
     [Header("Dash Settings")]
-    [SerializeField] private float dashSpeed = 1f;         // 홀드 중 이동 속도 (천천히 이동하도록 기본값 낮게)
+    [SerializeField] private float dashSpeed = 4f;         // 홀드 중 이동 속도 (천천히 이동하도록 기본값 낮게)
     [SerializeField] private float hpDrainInterval = 0.1f;  // hp가 깎이는 주기 (초)
     [SerializeField] private float hpDrainAmount = 1f;      // 주기마다 깎이는 hp량
+    [SerializeField] private float cooldownDuration = 1f;   // 대쉬 종료 후 다시 쓸 수 있을 때까지의 대기시간(초)
 
     [Header("References")]
     [SerializeField] private PlayerCursor playerCursor; // 커서 방향 계산용 - 반드시 인스펙터에서 연결할 것
@@ -26,6 +27,7 @@ public class Dash : MonoBehaviour
     private float originalGravity;
     private float hpDrainTimer = 0f;   // 0.1초 주기를 세기 위한 누적 타이머
     private Vector2 dashDirection;     // 대쉬 시작 순간에 고정되는 방향 (홀드 중 변하지 않음)
+    private float nextDashAvailableTime = 0f; // 이 시각(Time.time 기준)이 지나야 다시 대쉬 가능
 
     void Start()
     {
@@ -42,8 +44,15 @@ public class Dash : MonoBehaviour
 
     void Update()
     {
+        // hp가 0 이하로 떨어져 잠긴 상태였다가, 회복(HpBar의 자동 회복 등)으로 다시 0보다 커지면 잠금 해제
+        if (dashLocked && hpBar != null && hpBar.hp > 0f)
+        {
+            dashLocked = false;
+        }
+
         // 우클릭을 누르는 순간 -> 이 시점의 커서 방향으로 고정해서 대쉬 시작
-        if (Input.GetMouseButtonDown(1) && !isDashing && !dashLocked)
+        // 쿨타임(nextDashAvailableTime)이 지나야만 새로 시작 가능
+        if (Input.GetMouseButtonDown(1) && !isDashing && !dashLocked && Time.time >= nextDashAvailableTime)
         {
             StartDash();
         }
@@ -111,7 +120,7 @@ public class Dash : MonoBehaviour
         }
     }
 
-    // 대쉬 종료: 이동/중력/회전 원상복구
+    // 대쉬 종료: 이동/중력/회전 원상복구 + 쿨타임 시작
     private void EndDash()
     {
         isDashing = false;
@@ -120,11 +129,23 @@ public class Dash : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
 
         spriteTransform.rotation = originalRotation;
+
+        // 지금부터 cooldownDuration초 뒤에야 다시 대쉬 가능
+        nextDashAvailableTime = Time.time + cooldownDuration;
     }
 
     /// <summary>현재 대쉬를 사용할 수 있는 상태인지 확인 (UI 표시 등에 활용 가능)</summary>
     public bool CanDash()
     {
-        return !dashLocked && !isDashing;
+        return !dashLocked && !isDashing && Time.time >= nextDashAvailableTime;
     }
+
+    /// <summary>다시 대쉬 가능해지기까지 남은 시간(초). 쿨타임이 없으면 0. UI 쿨타임 표시 등에 활용.</summary>
+    public float GetRemainingCooldown()
+    {
+        return Mathf.Max(0f, nextDashAvailableTime - Time.time);
+    }
+
+    /// <summary>지금 대쉬(우클릭 홀드) 중인지 외부에서 읽기 위한 프로퍼티. HpBar.cs의 회복 로직에서 사용.</summary>
+    public bool IsDashing => isDashing;
 }
